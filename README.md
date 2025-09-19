@@ -2,7 +2,6 @@
 
 一个专为4岁儿童设计的睡前教育网站，包含多学科的趣味学习内容。
 
-背景：
 ## 背景
 
 暑假睡前孩子问我："学校为什么放假？"
@@ -35,7 +34,7 @@ python3 -m http.server 8000
 
 ## 在线访问
 
-[GitHub Pages链接](https://您的用户名.github.io/仓库名)
+[GitHub Pages链接](https://veronicatfan.github.io/bedtime4)
 
 ## 技术栈
 
