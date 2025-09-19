@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>睡前谈话小助手 - 与4岁孩子探索世界</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F46E5',
+            secondary: '#F97316',
+            accent: '#10B981',
+            warm: '#FBBF24',
+            cool: '#3B82F6',
+            light: '#F3F4F6',
+            dark: '#1F2937'
+          },
+          fontFamily: {
+            sans: ['Arial', 'sans-serif'],
+          },
+          animation: {
+            'twinkle': 'twinkle 2s ease-in-out infinite',
+            'float': 'float 3s ease-in-out infinite',
+          },
+          keyframes: {
+            twinkle: {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0.5 },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .star {
+        @apply absolute rounded-full bg-warm animate-twinkle;
+      }
+    }
+    
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* 星空背景动画 */
+    .starry-bg {
+      position: relative;
+      overflow: hidden;
+    }
+    .starry-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                  radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                  radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 1px);
+      background-size: 550px 550px, 350px 350px, 250px 250px;
+      background-position: 0 0, 40px 60px, 130px 270px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-indigo-900 to-blue-900 text-white min-h-screen">
+  <!-- 顶部导航栏 -->
+  <nav class="bg-primary/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-moon-o text-warm text-2xl animate-twinkle"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-shadow">睡前谈话小助手</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="todayBtn" class="bg-secondary hover:bg-secondary/80 text-white px-4 py-2 rounded-full flex items-center">
+          <i class="fa fa-calendar-o mr-2"></i>
+          <span id="currentDate">2025年7月21日</span>
+        </button>
+        <button id="favoritesBtn" class="bg-transparent hover:bg-white/20 text-white px-3 py-2 rounded-full">
+          <i class="fa fa-star-o text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主横幅 -->
+  <header class="relative overflow-hidden py-8 md:py-12">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+      <div class="md:w-1/2 mb-6 md:mb-0 z-10">
+        <h2 class="text-2xl md:text-4xl font-bold mb-4 text-shadow">与孩子一起探索奇妙世界</h2>
+        <p class="text-lg md:text-xl mb-6 text-blue-100">每天一套适合4岁孩子的睡前谈话内容，涵盖多学科知识，培养孩子的好奇心和学习兴趣。</p>
+        <div class="flex flex-wrap gap-3">
+          <button id="startBtn" class="bg-secondary hover:bg-secondary/80 text-white px-6 py-3 rounded-full font-medium flex items-center">
+            <i class="fa fa-play-circle mr-2"></i>
+            开始今天的探索
+          </button>
+          <button id="aboutBtn" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-full font-medium flex items-center">
+            <i class="fa fa-info-circle mr-2"></i>
+            了解更多
+          </button>
+        </div>
+      </div>
+      <div class="md:w-1/2 flex justify-center">
+        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c4de3f34124c40518d4385ca39734d00~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787803&x-signature=NT2ms9xhcv1QNtuiAPJVnOdruNY%3D" 
+             alt="亲子睡前谈话" 
+             class="w-full max-w-md rounded-lg shadow-2xl animate-float">
+      </div>
+    </div>
+    
+    <!-- 装饰性星星 -->
+    <div class="starry-bg absolute inset-0 z-0"></div>
+  </header>
+
+  <!-- 学科卡片区域 -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- 学科分类标签 -->
+    <div class="flex overflow-x-auto pb-4 mb-8 scrollbar-hide">
+      <button class="category-btn active whitespace-nowrap px-4 py-2 mr-3 rounded-full bg-primary text-white" data-category="all">
+        全部学科
+      </button>
+      <button class="category-btn whitespace-nowrap px-4 py-2 mr-3 rounded-full bg-white/20 hover:bg-white/30 text-white" data-category="language">
+        语言文学
+      </button>
+      <button class="category-btn whitespace-nowrap px-4 py-2 mr-3 rounded-full bg-white/20 hover:bg-white/30 text-white" data-category="science">
+        自然科学
+      </button>
+      <button class="category-btn whitespace-nowrap px-4 py-2 mr-3 rounded-full bg-white/20 hover:bg-white/30 text-white" data-category="social">
+        社会科学
+      </button>
+      <button class="category-btn whitespace-nowrap px-4 py-2 mr-3 rounded-full bg-white/20 hover:bg-white/30 text-white" data-category="arts">
+        艺术体育
+      </button>
+      <button class="category-btn whitespace-nowrap px-4 py-2 mr-3 rounded-full bg-white/20 hover:bg-white/30 text-white" data-category="elective">
+        选修课程
+      </button>
+    </div>
+
+    <!-- 卡片网格 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="subjectCards">
+      <!-- 语文学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="language">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="语文" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="chinese">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">语文：友好交流</h3>
+          <p class="text-blue-100 mb-4">教孩子如何与别人打交道，学习听说读写的基本技能，还可以引出简单的古诗。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="chinese">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 数学学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="science">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="数学" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="math">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">数学：解决问题</h3>
+          <p class="text-blue-100 mb-4">通过生活中的具体例子，如火车刹车距离，帮助孩子理解数学在日常生活中的应用。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="math">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 英语学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="language">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="英语" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="english">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">英语：国际交流</h3>
+          <p class="text-blue-100 mb-4">通过情景扮演，如在外国餐厅点餐，帮助孩子学习基础英语对话，培养国际交流能力。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="english">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 物理学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="science">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="物理" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="physics">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">物理：奇妙现象</h3>
+          <p class="text-blue-100 mb-4">探索日常生活中的物理现象，如水的三态变化，帮助孩子理解基本的物理概念和规律。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="physics">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 化学学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="science">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="化学" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="chemistry">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">化学：色彩变化</h3>
+          <p class="text-blue-100 mb-4">通过有趣的实验，如酸碱指示剂的颜色变化，帮助孩子了解基本的化学概念和物质变化。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="chemistry">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 历史学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="social">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="历史" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="history">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">历史：古代故事</h3>
+          <p class="text-blue-100 mb-4">讲述古时候人们的生活和故事，帮助孩子了解历史发展和文化传承。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="history">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 生物学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="science">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="生物" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="biology">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">生物：动物世界</h3>
+          <p class="text-blue-100 mb-4">探索小动物的生活习性、喜好和特长，帮助孩子了解生物多样性和自然界的奥秘。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="biology">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 地理学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="social">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7cdf2061a2774f2b97db56695e798c02~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787823&x-signature=%2BGCyHs34AMh1MwmUqpCuazA3Syo%3D" 
+                   alt="地理" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="geography">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">地理：地球探索</h3>
+          <p class="text-blue-100 mb-4">了解地球的构造、大洲大洋、山川河流和天气变化，帮助孩子建立全球视野。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="geography">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 体育学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="arts">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/59db0a05a2364f1693efae8a5674fc8f~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787835&x-signature=KM%2B983cJmH9iMycuKg4g%2BHns0Ok%3D" 
+                   alt="体育" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="pe">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">体育：健康运动</h3>
+          <p class="text-blue-100 mb-4">通过有趣的体育活动和游戏，培养孩子的运动兴趣和健康意识。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="pe">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 美术学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="arts">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/59db0a05a2364f1693efae8a5674fc8f~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787835&x-signature=KM%2B983cJmH9iMycuKg4g%2BHns0Ok%3D" 
+                   alt="美术" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="art">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">美术：创意表达</h3>
+          <p class="text-blue-100 mb-4">通过绘画、手工等活动，培养孩子的创造力和艺术表达能力。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="art">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 音乐学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="arts">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/59db0a05a2364f1693efae8a5674fc8f~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787835&x-signature=KM%2B983cJmH9iMycuKg4g%2BHns0Ok%3D" 
+                   alt="音乐" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="music">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">音乐：节奏旋律</h3>
+          <p class="text-blue-100 mb-4">通过唱歌、乐器演奏等活动，培养孩子的音乐感知能力和节奏感。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="music">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 芳香疗法学科卡片 -->
+      <div class="subject-card card-hover bg-white/10 backdrop-blur-md rounded-xl overflow-hidden" data-category="elective">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="bg-primary/30 p-3 rounded-lg">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/59db0a05a2364f1693efae8a5674fc8f~tplv-a9rns2rl98-image.image?rcl=202509181942471233778B0003E1C628A5&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1760787835&x-signature=KM%2B983cJmH9iMycuKg4g%2BHns0Ok%3D" 
+                   alt="芳香疗法" 
+                   class="w-12 h-12 object-contain">
+            </div>
+            <button class="favorite-btn text-white/70 hover:text-warm" data-id="aromatherapy">
+              <i class="fa fa-star-o text-xl"></i>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2">芳香疗法：自然香气</h3>
+          <p class="text-blue-100 mb-4">了解不同植物的香气及其对情绪的影响，通过安全的方式体验自然疗法的魅力。</p>
+          <button class="read-more-btn w-full bg-primary/20 hover:bg-primary/30 text-white py-2 rounded-lg flex items-center justify-center" data-id="aromatherapy">
+            <span>查看详情</span>
+            <i class="fa fa-chevron-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 详情模态框 -->
+  <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="modalOverlay"></div>
+    <div class="bg-gradient-to-b from-indigo-800 to-blue-900 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto z-10 mx-4">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 id="modalTitle" class="text-2xl font-bold text-white"></h3>
+          <button id="closeModal" class="text-white/70 hover:text-white">
+            <i class="fa fa-times text-2xl"></i>
+          </button>
+        </div>
+        
+        <div id="modalContent" class="space-y-6">
+          <!-- 内容将通过JavaScript动态填充 -->
+        </div>
+        
+        <!-- 互动问答环节 -->
+        <div id="interactionSection" class="mt-8 pt-6 border-t border-white/20">
+          <h4 class="text-xl font-bold mb-4 text-warm">互动问答</h4>
+          <div id="questionContainer" class="bg-white/10 p-4 rounded-lg mb-4">
+            <p id="interactionQuestion" class="text-lg"></p>
+          </div>
+          <div id="answerContainer" class="hidden bg-white/10 p-4 rounded-lg">
+            <p id="interactionAnswer" class="text-lg"></p>
+          </div>
+          <button id="showAnswerBtn" class="mt-4 bg-secondary hover:bg-secondary/80 text-white px-6 py-2 rounded-full">
+            查看答案
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关于模态框 -->
+  <div id="aboutModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="aboutModalOverlay"></div>
+    <div class="bg-gradient-to-b from-indigo-800 to-blue-900 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto z-10 mx-4">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-white">关于睡前谈话小助手</h3>
+          <button id="closeAboutModal" class="text-white/70 hover:text-white">
+            <i class="fa fa-times text-2xl"></i>
+          </button>
+        </div>
+        
+        <div class="space-y-6">
+          <p class="text-lg">睡前谈话小助手是一个专为有4岁左右孩子的家长设计的教育资源平台。我们提供系统化、趣味性的睡前谈话内容，以多学科知识为线索，帮助家长与孩子进行有意义的互动。</p>
+          
+          <h4 class="text-xl font-bold text-warm">我们的目标</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>培养孩子的好奇心和学习兴趣</li>
+            <li>增强亲子关系，创造优质的陪伴时间</li>
+            <li>通过简单有趣的方式介绍多学科知识</li>
+            <li>帮助孩子建立对世界的基本认知</li>
+          </ul>
+          
+          <h4 class="text-xl font-bold text-warm">学科内容</h4>
+          <p>我们的内容涵盖语文、数学、英语、物理、化学、历史、生物、地理、体育、美术、音乐等多个学科，以及芳香疗法等选修课程。每个学科都通过生活中的例子和简单有趣的方式呈现，适合4岁孩子理解和学习。</p>
+          
+          <h4 class="text-xl font-bold text-warm">使用建议</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>每天选择1-2个学科进行深入交流</li>
+            <li>结合孩子的兴趣和反应调整内容深度</li>
+            <li>鼓励孩子提问，并一起探索答案</li>
+            <li>收藏喜爱的内容，方便日后重复使用</li>
+          </ul>
+          
+          <p class="text-lg">我们希望睡前谈话小助手能成为家长和孩子探索世界的好伙伴，让学习变得有趣而自然！</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 收藏页面 -->
+  <div id="favoritesPage" class="container mx-auto px-4 py-8 hidden">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-shadow">我的收藏</h2>
+      <button id="backToHome" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full flex items-center">
+        <i class="fa fa-arrow-left mr-2"></i>
+        返回主页
+      </button>
+    </div>
+    
+    <div id="favoritesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- 收藏内容将通过JavaScript动态填充 -->
+      <div id="noFavoritesMessage" class="col-span-full text-center py-12">
+        <i class="fa fa-star-o text-5xl text-white/30 mb-4"></i>
+        <p class="text-xl text-white/70">还没有收藏内容</p>
+        <p class="text-blue-100 mt-2">点击卡片上的星星图标收藏喜欢的内容</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="bg-primary/80 backdrop-blur-md py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-blue-100">© 2025 睡前谈话小助手 - 与孩子一起探索奇妙世界</p>
+      <div class="flex justify-center space-x-4 mt-4">
+        <a href="#" class="text-white/70 hover:text-white">
+          <i class="fa fa-envelope text-xl"></i>
+        </a>
+        <a href="#" class="text-white/70 hover:text-white">
+          <i class="fa fa-weixin text-xl"></i>
+        </a>
+        <a href="#" class="text-white/70 hover:text-white">
+          <i class="fa fa-weibo text-xl"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 学科内容数据
+    const subjectData = {
+      chinese: {
+        title: "语文：友好交流",
+        content: `
+          <p class="text-lg mb-4">今天我们来聊聊如何与别人友好交流。交流就像玩积木，需要用不同的词语和句子来搭建一座沟通的桥梁。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">听说读写</h4>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li><span class="font-bold">听</span>：认真听别人说话，就像小侦探寻找线索一样，才能明白对方的意思。</li>
+            <li><span class="font-bold">说</span>：用清楚、礼貌的语言表达自己的想法，比如"请"、"谢谢"、"对不起"这些魔法词语。</li>
+            <li><span class="font-bold">读</span>：读书就像打开一扇扇神奇的大门，探索不同的世界。</li>
+            <li><span class="font-bold">写</span>：用画笔或文字记录自己的想法和感受，就像写日记一样。</li>
+          </ul>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">古诗欣赏</h4>
+          <p class="mb-2">我们来学习一首简单的古诗：</p>
+          <div class="bg-white/10 p-4 rounded-lg mb-4">
+            <p class="text-center text-lg">《静夜思》</p>
+            <p class="text-center text-lg mt-2">床前明月光，疑是地上霜。</p>
+            <p class="text-center text-lg">举头望明月，低头思故乡。</p>
+          </div>
+          <p>这首诗是唐代诗人李白写的，描述了他在夜晚看到月亮时思念家乡的心情。你可以问问孩子："你看到月亮时会想到什么呢？"</p>
+        `,
+        interaction: {
+          question: "如果你想向小朋友借玩具，应该怎么说呢？",
+          answer: "可以说：'请问我可以借你的玩具玩一下吗？谢谢你！' 这样既礼貌又清楚地表达了自己的想法。记住，友好的语言能帮助我们交到更多好朋友哦！"
+        }
+      },
+      math: {
+        title: "数学：解决问题",
+        content: `
+          <p class="text-lg mb-4">数学不仅仅是数字和加减乘除，它还能帮助我们解决生活中的很多问题。今天我们就来看看数学在生活中的应用。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">火车刹车问题</h4>
+          <p class="mb-4">想象一下，一列火车正在铁轨上行驶，它需要在终点站停下来。火车司机需要提前多久开始刹车呢？</p>
+          <p class="mb-4">这就需要用到数学了！司机需要考虑：</p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li>火车现在的速度有多快？</li>
+            <li>火车的重量是多少？</li>
+            <li>铁轨的状况如何？（干燥、潮湿或结冰）</li>
+            <li>火车需要在多长的距离内停下来？</li>
+          </ul>
+          
+          <p class="mb-4">通过计算这些因素，司机就能知道什么时候开始刹车，确保火车安全停靠在站台上。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">生活中的数学</h4>
+          <p class="mb-4">我们可以和孩子一起发现生活中的数学问题：</p>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>家里有几口人？需要准备多少个碗和筷子？</li>
+            <li>如果每天吃一个苹果，一周需要买多少个苹果？</li>
+            <li>从家到幼儿园需要走多少步？</li>
+          </ul>
+        `,
+        interaction: {
+          question: "如果你的小火车需要从客厅的一头开到另一头，它需要经过哪些东西？需要多长时间呢？",
+          answer: "这是一个很好的观察和估算练习！孩子可以观察客厅里的家具摆放，估算小火车需要经过的距离和时间。这个游戏能帮助孩子培养空间意识和简单的估算能力。"
+        }
+      },
+      english: {
+        title: "英语：国际交流",
+        content: `
+          <p class="text-lg mb-4">英语是一种国际通用语言，学好英语可以帮助我们和来自不同国家的人交流。今天我们来学习一些简单的英语对话。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">情景扮演：在外国餐厅</h4>
+          <p class="mb-4">想象一下，你和爸爸妈妈来到了一家外国餐厅，你想点一份胡萝卜水饺。你可以这样说：</p>
+          
+          <div class="bg-white/10 p-4 rounded-lg mb-4">
+            <p class="mb-2"><span class="font-bold text-warm">Waiter:</span> Hello! Can I help you?</p>
+            <p class="mb-2"><span class="font-bold text-cool">You:</span> Yes, I'd like some carrot dumplings, please.</p>
+            <p class="mb-2"><span class="font-bold text-warm">Waiter:</span> Carrot dumplings? Sure! Anything else?</p>
+            <p class="mb-2"><span class="font-bold text-cool">You:</span> No, thank you.</p>
+            <p><span class="font-bold text-warm">Waiter:</span> You're welcome. Enjoy your meal!</p>
+          </div>
+          
+          <p class="mb-4">和孩子一起练习这个对话，让孩子扮演顾客，你扮演服务员。可以尝试不同的食物名称，比如：</p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li>面条 - noodles</li>
+            <li>米饭 - rice</li>
+            <li>鸡肉 - chicken</li>
+            <li>鱼 - fish</li>
+            <li>蔬菜 - vegetables</li>
+          </ul>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">常用礼貌用语</h4>
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-white/10 p-3 rounded-lg">
+              <p>Hello! - 你好！</p>
+              <p>Goodbye! - 再见！</p>
+              <p>Please - 请</p>
+              <p>Thank you - 谢谢</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg">
+              <p>Sorry - 对不起</p>
+              <p>Excuse me - 打扰一下</p>
+              <p>Yes - 是</p>
+              <p>No - 不</p>
+            </div>
+          </div>
+        `,
+        interaction: {
+          question: "如果你在外国公园看到一个小朋友在玩你喜欢的玩具，你想和他一起玩，应该怎么说呢？",
+          answer: "你可以说：'Hello! Can I play with you?'（你好！我可以和你一起玩吗？）或者'Nice to meet you! What's your name?'（很高兴认识你！你叫什么名字？）。记住，微笑和友好的态度是最好的语言哦！"
+        }
+      },
+      physics: {
+        title: "物理：奇妙现象",
+        content: `
+          <p class="text-lg mb-4">物理学是研究自然界中各种现象和规律的科学。今天我们来探索一些有趣的物理现象。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">水的三态变化</h4>
+          <p class="mb-4">水是我们生活中最常见的物质之一，但你知道吗？水可以变成三种不同的形态：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg text-center">
+              <div class="text-3xl mb-2"><i class="fa fa-tint text-blue-400"></i></div>
+              <h5 class="font-bold mb-2">液态 - 水</h5>
+              <p>我们平时喝的水、洗澡的水都是液态的。液体可以流动，可以变成容器的形状。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg text-center">
+              <div class="text-3xl mb-2"><i class="fa fa-snowflake-o text-blue-200"></i></div>
+              <h5 class="font-bold mb-2">固态 - 冰</h5>
+              <p>当水的温度降到0°C以下时，就会变成冰。固体有固定的形状，不能流动。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg text-center">
+              <div class="text-3xl mb-2"><i class="fa fa-cloud text-gray-300"></i></div>
+              <h5 class="font-bold mb-2">气态 - 水蒸气</h5>
+              <p>当水被加热到100°C时，就会变成水蒸气。气体看不见摸不着，会扩散到空气中。</p>
+            </div>
+          </div>
+          
+          <p class="mb-4">你可以和孩子一起做一个简单的实验：</p>
+          <ol class="list-decimal pl-5 space-y-2 mb-4">
+            <li>在冰箱里放一些冰块，观察它们融化成水的过程。</li>
+            <li>烧一壶水，观察水蒸气上升的现象。</li>
+            <li>在冷玻璃上哈气，观察水蒸气凝结成小水滴的过程。</li>
+          </ol>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">其他有趣的物理现象</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><span class="font-bold">重力</span>：为什么苹果会从树上掉下来？</li>
+            <li><span class="font-bold">摩擦力</span>：为什么我们走路不会滑倒？</li>
+            <li><span class="font-bold">声音</span>：为什么我们能听到远处的声音？</li>
+            <li><span class="font-bold">光</span>：为什么镜子能反射影像？</li>
+          </ul>
+        `,
+        interaction: {
+          question: "你能举一个生活中的例子，说明水可以变成三种不同的形态吗？",
+          answer: "一个很好的例子是冬天的雪人：雪是由很多小冰晶组成的（固态）；当天气变暖时，雪人会融化成水（液态）；如果我们把水加热，它会变成水蒸气（气态）。这个过程展示了水的三态变化，是不是很神奇？"
+        }
+      },
+      chemistry: {
+        title: "化学：色彩变化",
+        content: `
+          <p class="text-lg mb-4">化学是研究物质的组成、结构和变化的科学。今天我们来探索一些有趣的化学变化，特别是颜色的变化。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">水的酸碱性变颜色</h4>
+          <p class="mb-4">你知道吗？有些物质可以告诉我们水是酸性的还是碱性的，它们叫做酸碱指示剂。最常见的酸碱指示剂是紫色的石蕊溶液：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg text-center">
+              <div class="w-full h-16 bg-purple-500 rounded mb-2"></div>
+              <h5 class="font-bold mb-2">中性 - 紫色</h5>
+              <p>当石蕊溶液遇到中性的水时，保持紫色不变。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg text-center">
+              <div class="w-full h-16 bg-red-500 rounded mb-2"></div>
+              <h5 class="font-bold mb-2">酸性 - 红色</h5>
+              <p>当石蕊溶液遇到酸性物质（如柠檬汁、醋）时，会变成红色。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg text-center">
+              <div class="w-full h-16 bg-blue-500 rounded mb-2"></div>
+              <h5 class="font-bold mb-2">碱性 - 蓝色</h5>
+              <p>当石蕊溶液遇到碱性物质（如肥皂水、小苏打水）时，会变成蓝色。</p>
+            </div>
+          </div>
+          
+          <p class="mb-4">你可以和孩子一起做一个简单的实验：</p>
+          <ol class="list-decimal pl-5 space-y-2 mb-4">
+            <li>准备一些紫甘蓝，切碎后煮水，得到紫色的汁液（这是一种天然的酸碱指示剂）。</li>
+            <li>在几个透明杯子里分别倒入水、柠檬汁、醋、肥皂水、小苏打水。</li>
+            <li>向每个杯子里加入少量紫甘蓝汁液，观察颜色的变化。</li>
+          </ol>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">其他有趣的化学变化</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><span class="font-bold">铁生锈</span>：为什么铁钉会变成红褐色？</li>
+            <li><span class="font-bold">食物变质</span>：为什么食物放久了会变味？</li>
+            <li><span class="font-bold">燃烧</span>：为什么木头燃烧后会变成灰烬？</li>
+            <li><span class="font-bold">发酵</span>：为什么面团会发起来？</li>
+          </ul>
+        `,
+        interaction: {
+          question: "你能说出三种会改变颜色的化学变化吗？",
+          answer: "1. 树叶在秋天变黄或变红：这是因为树叶中的叶绿素分解，其他色素显现出来。2. 苹果切开后变褐色：这是因为苹果中的酶与氧气发生反应。3. 煮鸡蛋时蛋白和蛋黄变固体：这是因为高温使蛋白质发生变性。这些都是日常生活中常见的化学变化哦！"
+        }
+      },
+      history: {
+        title: "历史：古代故事",
+        content: `
+          <p class="text-lg mb-4">历史就像一本有趣的故事书，讲述着古时候人们的生活和经历。今天我们来听听一些古代的故事。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">古代人的生活</h4>
+          <p class="mb-4">很久很久以前，人们的生活和我们现在很不一样：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">住在哪里？</h5>
+              <p>早期的人类住在山洞里，后来学会了用树枝、树叶和泥土建造简单的房子。古代中国人发明了用木头建造的房屋，有独特的飞檐和斗拱结构。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">吃什么？</h5>
+              <p>早期的人类靠打猎和采集野果为生。后来发明了农业，开始种植小麦、水稻等农作物，饲养猪、牛、羊等动物。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">穿什么？</h5>
+              <p>早期的人类用兽皮和树叶做衣服。后来发明了纺织技术，用植物纤维（如棉花、麻）和动物纤维（如羊毛、丝绸）做衣服。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">怎么交流？</h5>
+              <p>早期的人类通过声音和手势交流。后来发明了文字，最初是象形文字（如画一个太阳代表"日"），后来逐渐演变成现在的文字。</p>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">有趣的历史故事</h4>
+          <p class="mb-4">我们来听听"孔融让梨"的故事：</p>
+          <div class="bg-white/10 p-4 rounded-lg mb-4">
+            <p class="mb-2">古时候有个叫孔融的小朋友，他有五个哥哥和一个弟弟。一天，家里吃梨，爸爸让孔融先挑。</p>
+            <p class="mb-2">孔融挑了一个最小的梨，爸爸问他为什么不挑大的。孔融说："我年纪小，应该吃小的；大的留给哥哥们吃。"</p>
+            <p class="mb-2">爸爸又问："那你还有个弟弟呢？"孔融说："我是哥哥，应该让着弟弟，把大的梨留给弟弟吃。"</p>
+            <p>爸爸听了很高兴，夸孔融是个懂事的好孩子。</p>
+          </div>
+          
+          <p>这个故事告诉我们要懂得谦让和尊重他人。你可以问问孩子："如果你是孔融，你会怎么做呢？"</p>
+        `,
+        interaction: {
+          question: "你知道古代人没有电灯，晚上用什么照明吗？",
+          answer: "古代人晚上用蜡烛、油灯或火把照明。有钱人可能用蜡烛，普通人多用油灯（用植物油和灯芯制成）。在没有发明灯之前，人们可能只能在白天活动，晚上就休息了。想象一下，如果现在突然没有电了，我们的生活会变成什么样呢？"
+        }
+      },
+      biology: {
+        title: "生物：动物世界",
+        content: `
+          <p class="text-lg mb-4">生物学是研究生命现象的科学。今天我们来探索奇妙的动物世界，了解小动物们的生活习性。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">小动物的生活</h4>
+          <p class="mb-4">让我们来认识几种常见的小动物，了解它们喜欢吃什么、擅长什么、不擅长什么：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">小兔子</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">喜欢吃什么？</span> 胡萝卜、青菜、青草</li>
+                <li><span class="font-bold">擅长什么？</span> 跑步、跳跃、听力好</li>
+                <li><span class="font-bold">不擅长什么？</span> 游泳、视力不好（尤其是近距离）</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">小猫咪</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">喜欢吃什么？</span> 鱼、猫粮、老鼠</li>
+                <li><span class="font-bold">擅长什么？</span> 爬树、跳跃、夜间视力好</li>
+                <li><span class="font-bold">不擅长什么？</span> 游泳、不喜欢水</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">小狗狗</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">喜欢吃什么？</span> 肉、狗粮、骨头</li>
+                <li><span class="font-bold">擅长什么？</span> 跑步、嗅觉灵敏、听从命令</li>
+                <li><span class="font-bold">不擅长什么？</span> 爬树、视力不如嗅觉好</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">小松鼠</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">喜欢吃什么？</span> 坚果、种子、果实</li>
+                <li><span class="font-bold">擅长什么？</span> 爬树、跳跃、储存食物</li>
+                <li><span class="font-bold">不擅长什么？</span> 游泳、长时间跑步</li>
+              </ul>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">动物的过去和未来</h4>
+          <p class="mb-4">动物们也在不断变化和适应环境：</p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li><span class="font-bold">过去</span>：很多现在的动物都有古老的祖先。例如，现在的马是由比猫还小的始祖马进化而来的；现在的鸟类可能是由恐龙进化而来的。</li>
+            <li><span class="font-bold">未来</span>：动物们会继续适应环境的变化。例如，如果气候变暖，一些动物可能会改变它们的生活习性或迁移到新的地方。</li>
+          </ul>
+          
+          <p>你可以和孩子一起观察家里或公园里的小动物，记录它们的行为和特点，培养孩子的观察力和对大自然的热爱。</p>
+        `,
+        interaction: {
+          question: "如果你可以变成一种小动物，你想变成什么？为什么？",
+          answer: "这个问题没有标准答案，每个孩子的想法都很有趣！有的孩子可能想变成小鸟，因为可以飞翔；有的可能想变成鱼，因为可以在水里游；还有的可能想变成狮子，因为很强大。通过这个问题，我们可以了解孩子的兴趣和愿望，同时也能引导他们思考不同动物的特点和生活习性。"
+        }
+      },
+      geography: {
+        title: "地理：地球探索",
+        content: `
+          <p class="text-lg mb-4">地理学是研究地球表面的科学。今天我们来探索我们生活的这个美丽星球——地球。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">地球的构造</h4>
+          <p class="mb-4">地球是一个巨大的球体，由几个主要部分组成：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">大洲</h5>
+              <p>地球表面有七个大洲，它们是：亚洲、非洲、北美洲、南美洲、欧洲、大洋洲和南极洲。我们中国位于亚洲。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">大洋</h5>
+              <p>地球表面有四个主要的大洋，它们是：太平洋、大西洋、印度洋和北冰洋。海洋覆盖了地球表面约71%的面积。</p>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">重要的山川河流</h4>
+          <p class="mb-4">地球上有很多壮观的山川河流：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">著名的山脉</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>喜马拉雅山脉（亚洲）- 世界最高的山脉，有世界最高峰珠穆朗玛峰</li>
+                <li>安第斯山脉（南美洲）- 世界最长的山脉</li>
+                <li>阿尔卑斯山脉（欧洲）- 欧洲最高大的山脉</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">著名的河流</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>尼罗河（非洲）- 世界最长的河流</li>
+                <li>亚马逊河（南美洲）- 世界流量最大的河流</li>
+                <li>长江（亚洲）- 中国最长的河流，世界第三长河流</li>
+              </ul>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">天气和天文</h4>
+          <p class="mb-4">天气是指我们每天感受到的大气状况，如晴天、阴天、雨天、雪天等。天文则是研究太阳、月亮、星星等天体的科学。</p>
+          
+          <ul class="list-disc pl-5 space-y-2">
+            <li><span class="font-bold">四季变化</span>：地球绕着太阳公转，同时自转，形成了春夏秋冬四季。</li>
+            <li><span class="font-bold">白天和黑夜</span>：地球自转一周大约需要24小时，形成了白天和黑夜。</li>
+            <li><span class="font-bold">月相变化</span>：月亮绕着地球转，我们看到的月亮形状会随着时间变化，这就是月相。</li>
+          </ul>
+        `,
+        interaction: {
+          question: "如果你能去地球上的任何一个地方旅行，你想去哪里？为什么？",
+          answer: "这个问题可以激发孩子的想象力和对世界的好奇心！有的孩子可能想去海边，因为喜欢沙滩和海浪；有的可能想去高山，因为喜欢爬山和看风景；还有的可能想去森林，因为喜欢小动物和植物。通过这个问题，我们可以和孩子一起探索地球的多样性和美丽之处。"
+        }
+      },
+      pe: {
+        title: "体育：健康运动",
+        content: `
+          <p class="text-lg mb-4">体育锻炼对我们的身体健康非常重要。今天我们来了解一些有趣的体育活动，培养孩子的运动兴趣。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">适合4岁孩子的体育活动</h4>
+          <p class="mb-4">4岁的孩子正处于身体快速发展的阶段，适合进行一些简单有趣的体育活动：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">跑步和跳跃</h5>
+              <p>可以玩"小兔子跳"、"障碍跑"等游戏，锻炼孩子的协调性和平衡能力。例如，在地上画一些格子，让孩子单脚跳或双脚跳着前进。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">球类运动</h5>
+              <p>可以玩简单的拍皮球、扔沙包、踢足球等游戏，锻炼孩子的手眼协调能力和反应速度。例如，和孩子一起玩"传球"游戏，把球来回传递。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">平衡和协调</h5>
+              <p>可以玩"走独木桥"（用绳子或木板铺在地上）、"金鸡独立"等游戏，锻炼孩子的平衡能力。例如，让孩子尝试单脚站立，看能坚持多久。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">柔韧性</h5>
+              <p>可以做一些简单的拉伸运动，如"小猫伸懒腰"、"小飞机"等，锻炼孩子的柔韧性。例如，让孩子模仿小猫，双手和膝盖着地，弓起背再放下。</p>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">体育活动的好处</h4>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li>增强体质，提高免疫力</li>
+            <li>促进身体发育，增强肌肉力量</li>
+            <li>提高协调性和平衡能力</li>
+            <li>培养团队合作精神</li>
+            <li>缓解压力，保持愉快的心情</li>
+          </ul>
+          
+          <p>你可以和孩子一起制定一个简单的"运动计划"，每天安排一些时间进行体育活动，培养孩子的运动习惯和健康意识。</p>
+        `,
+        interaction: {
+          question: "你最喜欢的运动是什么？为什么喜欢它？",
+          answer: "每个孩子可能有不同的喜好！有的孩子喜欢跑步，因为感觉像风一样自由；有的喜欢游泳，因为喜欢在水里的感觉；还有的喜欢跳舞，因为喜欢跟着音乐动起来。通过这个问题，我们可以了解孩子的兴趣爱好，鼓励他们坚持自己喜欢的运动，同时也可以引导他们尝试新的运动项目。"
+        }
+      },
+      art: {
+        title: "美术：创意表达",
+        content: `
+          <p class="text-lg mb-4">美术是一种创造性的表达方式。今天我们来探索一些简单有趣的美术活动，培养孩子的创造力和艺术表达能力。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">适合4岁孩子的美术活动</h4>
+          <p class="mb-4">4岁的孩子已经可以进行一些简单的美术创作：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">手指画</h5>
+              <p>让孩子用手指蘸上颜料，在纸上创作各种图案。这种方法简单直接，适合小年龄的孩子。可以尝试用不同的手指、不同的力度创作不同的效果。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">涂鸦和绘画</h5>
+              <p>给孩子提供蜡笔、彩笔或水彩笔，让他们自由地在纸上涂鸦。不要限制他们画什么，鼓励他们表达自己的想法和感受。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">手工制作</h5>
+              <p>用简单的材料如纸张、剪刀、胶水、彩绳等进行手工制作。例如，可以用纸箱制作小房子，用彩纸制作花朵，用旧报纸制作球等。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">自然材料创作</h5>
+              <p>收集一些自然材料如树叶、石头、树枝等，让孩子用这些材料进行创作。例如，可以用树叶拼贴画，用石头画画等。</p>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">美术活动的好处</h4>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li>培养创造力和想象力</li>
+            <li>提高手眼协调能力和精细动作</li>
+            <li>增强色彩感知能力和审美能力</li>
+            <li>提供情感表达的渠道</li>
+            <li>培养耐心和专注力</li>
+          </ul>
+          
+          <p>你可以为孩子准备一个"美术角"，提供各种美术材料，鼓励他们随时进行创作。记住，对孩子的作品要多鼓励、多表扬，不要用成人的标准来评判。</p>
+        `,
+        interaction: {
+          question: "如果你可以画任何东西，你想画什么？为什么？",
+          answer: "这个问题可以激发孩子的想象力和创造力！有的孩子可能想画自己的家人，因为爱他们；有的可能想画自己的梦想，如会飞的房子；还有的可能想画自己喜欢的动物或玩具。通过这个问题，我们可以了解孩子的内心世界，鼓励他们用艺术表达自己的想法和感受。"
+        }
+      },
+      music: {
+        title: "音乐：节奏旋律",
+        content: `
+          <p class="text-lg mb-4">音乐是一种美妙的艺术形式。今天我们来探索音乐的世界，培养孩子的音乐感知能力和节奏感。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">适合4岁孩子的音乐活动</h4>
+          <p class="mb-4">4岁的孩子对音乐已经有了一定的感知能力，可以进行一些简单的音乐活动：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">唱歌</h5>
+              <p>教孩子唱一些简单的儿歌，如《小星星》、《两只老虎》等。可以边唱边做动作，增加趣味性。鼓励孩子自己编歌词，培养创造力。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">打击乐器</h5>
+              <p>用简单的打击乐器如鼓、铃鼓、沙锤等，让孩子感受节奏。也可以用日常生活中的物品制作乐器，如用瓶子装沙子做沙锤，用锅碗瓢盆做鼓。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">音乐游戏</h5>
+              <p>玩一些音乐游戏，如"听音乐猜动物"（播放模仿动物叫声的音乐，让孩子猜是什么动物）、"跟着音乐跳舞"（根据音乐的节奏和速度变换舞蹈动作）等。</p>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">认识乐器</h5>
+              <p>通过图片或视频，让孩子认识一些常见的乐器，如钢琴、小提琴、吉他、长笛等，了解它们的外观和声音特点。</p>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">音乐活动的好处</h4>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li>培养音乐感知能力和节奏感</li>
+            <li>提高语言能力和记忆力（通过唱歌）</li>
+            <li>增强情绪表达能力</li>
+            <li>培养创造力和想象力</li>
+            <li>促进大脑发育，提高学习能力</li>
+          </ul>
+          
+          <p>你可以每天安排一些时间和孩子一起进行音乐活动，如睡前唱摇篮曲，起床时播放欢快的音乐等。让音乐成为孩子生活的一部分，丰富他们的情感世界。</p>
+        `,
+        interaction: {
+          question: "你最喜欢的歌曲是什么？为什么喜欢它？",
+          answer: "每个孩子可能有不同的喜好！有的孩子喜欢欢快的歌曲，因为能让他们跳舞；有的喜欢安静的歌曲，因为能让他们感到放松；还有的喜欢有故事的歌曲，因为喜欢听歌词里的故事。通过这个问题，我们可以了解孩子的音乐品味，同时也可以和他们一起探索更多不同类型的音乐。"
+        }
+      },
+      aromatherapy: {
+        title: "芳香疗法：自然香气",
+        content: `
+          <p class="text-lg mb-4">芳香疗法是一种利用植物香气来改善情绪和健康的自然疗法。今天我们来探索一些常见的植物香气，了解它们对我们情绪的影响。</p>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">常见的芳香植物</h4>
+          <p class="mb-4">让我们来认识几种常见的芳香植物，了解它们的香气特点和对情绪的影响：</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">薰衣草</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">香气特点</span>：清新、甜美、 floral</li>
+                <li><span class="font-bold">对情绪的影响</span>：帮助放松、缓解焦虑、促进睡眠</li>
+                <li><span class="font-bold">小知识</span>：薰衣草是最常用的芳香植物之一，常用于制作香薰、护肤品等。</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">柠檬</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">香气特点</span>：清新、酸爽、提神</li>
+                <li><span class="font-bold">对情绪的影响</span>：提神醒脑、提高注意力、改善心情</li>
+                <li><span class="font-bold">小知识</span>：柠檬的香气可以帮助减轻疲劳感，提高工作和学习效率。</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">玫瑰</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">香气特点</span>：浓郁、甜美、浪漫</li>
+                <li><span class="font-bold">对情绪的影响</span>：舒缓情绪、减轻压力、带来愉悦感</li>
+                <li><span class="font-bold">小知识</span>：玫瑰是爱情和浪漫的象征，常用于制作香水和护肤品。</li>
+              </ul>
+            </div>
+            <div class="bg-white/10 p-4 rounded-lg">
+              <h5 class="font-bold mb-2">薄荷</h5>
+              <ul class="list-disc pl-5 space-y-1">
+                <li><span class="font-bold">香气特点</span>：清凉、清新、提神</li>
+                <li><span class="font-bold">对情绪的影响</span>：提神醒脑、缓解疲劳、提高注意力</li>
+                <li><span class="font-bold">小知识</span>：薄荷的香气可以帮助缓解头痛和恶心感。</li>
+              </ul>
+            </div>
+          </div>
+          
+          <h4 class="text-xl font-bold mb-3 text-warm">安全体验芳香的方法</h4>
+          <p class="mb-4">对于孩子，我们可以通过以下安全的方式体验芳香：</p>
+          <ul class="list-disc pl-5 space-y-2 mb-4">
+            <li><span class="font-bold">闻新鲜的花草</span>：在花园里或花店，让孩子轻轻闻一闻新鲜的花草。</li>
+            <li><span class="font-bold">香薰袋</span>：用小布袋装一些干花（如薰衣草），放在孩子的房间或衣柜里。</li>
+            <li><span class="font-bold">天然香皂</span>：选择含有天然植物精油的香皂，让孩子在洗澡时体验香气。</li>
+          </ul>
+          
+          <p class="text-yellow-300">注意：对于婴幼儿，应避免使用浓缩的精油，因为它们的皮肤和呼吸系统比较敏感。</p>
+          
+          <p>你可以和孩子一起种植一些芳香植物，如薄荷、薰衣草等，让他们亲身体验植物的生长过程和香气变化。</p>
+        `,
+        interaction: {
+          question: "你最喜欢什么气味？它让你想起什么？",
+          answer: "这个问题可以帮助孩子关注自己的感官体验和情绪反应。有的孩子可能喜欢妈妈做饭的气味，因为它让他们感到温暖和安全；有的可能喜欢雨后泥土的气味，因为它让他们感到清新和舒适；还有的可能喜欢水果的气味，因为它让他们感到愉快和期待。通过这个问题，我们可以和孩子一起探索气味与记忆、情绪之间的联系。"
+        }
+      }
+    };
+
+    // 当前日期显示
+    document.addEventListener('DOMContentLoaded', function() {
+      // 设置当前日期
+      const now = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
+      
+      // 从本地存储加载收藏状态
+      loadFavorites();
+      
+      // 绑定事件
+      bindEvents();
+    });
+
+    // 绑定事件
+    function bindEvents() {
+      // 详情按钮点击事件
+      document.querySelectorAll('.read-more-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const subjectId = this.getAttribute('data-id');
+          showSubjectDetail(subjectId);
+        });
+      });
+      
+      // 收藏按钮点击事件
+      document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const subjectId = this.getAttribute('data-id');
+          toggleFavorite(subjectId, this);
+        });
+      });
+      
+      // 关闭模态框按钮点击事件
+      document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('detailModal').classList.add('hidden');
+      });
+      
+      // 模态框背景点击事件
+      document.getElementById('modalOverlay').addEventListener('click', function() {
+        document.getElementById('detailModal').classList.add('hidden');
+      });
+      
+      // 查看答案按钮点击事件
+      document.getElementById('showAnswerBtn').addEventListener('click', function() {
+        document.getElementById('answerContainer').classList.remove('hidden');
+        this.textContent = '收起答案';
+        this.addEventListener('click', function() {
+          document.getElementById('answerContainer').classList.add('hidden');
+          this.textContent = '查看答案';
+        }, { once: true });
+      });
+      
+      // 分类按钮点击事件
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const category = this.getAttribute('data-category');
+          
+          // 更新按钮样式
+          document.querySelectorAll('.category-btn').forEach(b => {
+            b.classList.remove('active', 'bg-primary');
+            b.classList.add('bg-white/20');
+          });
+          this.classList.add('active', 'bg-primary');
+          this.classList.remove('bg-white/20');
+          
+          // 筛选卡片
+          filterCards(category);
+        });
+      });
+      
+      // 收藏页面按钮点击事件
+      document.getElementById('favoritesBtn').addEventListener('click', function() {
+        showFavoritesPage();
+      });
+      
+      // 返回主页按钮点击事件
+      document.getElementById('backToHome').addEventListener('click', function() {
+        showHomePage();
+      });
+      
+      // 开始今天的探索按钮点击事件
+      document.getElementById('startBtn').addEventListener('click', function() {
+        // 默认显示第一个学科的详情
+        showSubjectDetail('chinese');
+      });
+      
+      // 关于按钮点击事件
+      document.getElementById('aboutBtn').addEventListener('click', function() {
+        document.getElementById('aboutModal').classList.remove('hidden');
+      });
+      
+      // 关闭关于模态框按钮点击事件
+      document.getElementById('closeAboutModal').addEventListener('click', function() {
+        document.getElementById('aboutModal').classList.add('hidden');
+      });
+      
+      // 关于模态框背景点击事件
+      document.getElementById('aboutModalOverlay').addEventListener('click', function() {
+        document.getElementById('aboutModal').classList.add('hidden');
+      });
+      
+      // 今天按钮点击事件
+      document.getElementById('todayBtn').addEventListener('click', function() {
+        showHomePage();
+      });
+    }
+
+    // 显示学科详情
+    function showSubjectDetail(subjectId) {
+      const subject = subjectData[subjectId];
+      if (!subject) return;
+      
+      // 填充模态框内容
+      document.getElementById('modalTitle').textContent = subject.title;
+      document.getElementById('modalContent').innerHTML = subject.content;
+      document.getElementById('interactionQuestion').textContent = subject.interaction.question;
+      document.getElementById('interactionAnswer').textContent = subject.interaction.answer;
+      
+      // 重置答案显示状态
+      document.getElementById('answerContainer').classList.add('hidden');
+      document.getElementById('showAnswerBtn').textContent = '查看答案';
+      
+      // 显示模态框
+      document.getElementById('detailModal').classList.remove('hidden');
+      
+      // 滚动到顶部
+      document.querySelector('#detailModal .max-h-\\[90vh\\]').scrollTop = 0;
+    }
+
+    // 切换收藏状态
+    function toggleFavorite(subjectId, btn) {
+      let favorites = JSON.parse(localStorage.getItem('bedtimeFavorites') || '[]');
+      
+      const index = favorites.indexOf(subjectId);
+      if (index === -1) {
+        // 添加到收藏
+        favorites.push(subjectId);
+        btn.innerHTML = '<i class="fa fa-star text-xl text-warm"></i>';
+        showToast('已添加到收藏');
+      } else {
+        // 取消收藏
+        favorites.splice(index, 1);
+        btn.innerHTML = '<i class="fa fa-star-o text-xl"></i>';
+        showToast('已取消收藏');
+      }
+      
+      // 保存到本地存储
+      localStorage.setItem('bedtimeFavorites', JSON.stringify(favorites));
+      
+      // 如果当前在收藏页面，更新收藏列表
+      if (!document.getElementById('favoritesPage').classList.contains('hidden')) {
+        renderFavorites();
+      }
+    }
+
+    // 从本地存储加载收藏状态
+    function loadFavorites() {
+      const favorites = JSON.parse(localStorage.getItem('bedtimeFavorites') || '[]');
+      
+      // 更新收藏按钮样式
+      document.querySelectorAll('.favorite-btn').forEach(btn => {
+        const subjectId = btn.getAttribute('data-id');
+        if (favorites.includes(subjectId)) {
+          btn.innerHTML = '<i class="fa fa-star text-xl text-warm"></i>';
+        } else {
+          btn.innerHTML = '<i class="fa fa-star-o text-xl"></i>';
+        }
+      });
+    }
+
+    // 显示收藏页面
+    function showFavoritesPage() {
+      document.querySelector('main').classList.add('hidden');
+      document.querySelector('header').classList.add('hidden');
+      document.getElementById('favoritesPage').classList.remove('hidden');
+      
+      // 渲染收藏列表
+      renderFavorites();
+    }
+
+    // 显示主页
+    function showHomePage() {
+      document.querySelector('main').classList.remove('hidden');
+      document.querySelector('header').classList.remove('hidden');
+      document.getElementById('favoritesPage').classList.add('hidden');
+    }
+
+    // 渲染收藏列表
+    function renderFavorites() {
+      const favorites = JSON.parse(localStorage.getItem('bedtimeFavorites') || '[]');
+      const container = document.getElementById('favoritesContainer');
+      const noFavoritesMessage = document.getElementById('noFavoritesMessage');
+      
+      // 清空容器
+      while (container.firstChild) {
+        if (container.firstChild !== noFavoritesMessage) {
+          container.removeChild(container.firstChild);
+        } else {
+          break;
+        }
+      }
+      
+      if (favorites.length === 0) {
+        // 显示无收藏提示
+        noFavoritesMessage.classList.remove('hidden');
+      } else {
+        // 隐藏无收藏提示
+        noFavoritesMessage.classList.add('hidden');
+        
+        // 添加收藏的卡片
+        favorites.forEach(subjectId => {
+          const subjectCard = document.querySelector(`.subject-card[data-id="${subjectId}"]`);
+          if (subjectCard) {
+            const clone = subjectCard.cloneNode(true);
+            
+            // 重新绑定事件
+            const readMoreBtn = clone.querySelector('.read-more-btn');
+            readMoreBtn.addEventListener('click', function() {
+              showSubjectDetail(subjectId);
+            });
+            
+            const favoriteBtn = clone.querySelector('.favorite-btn');
+            favoriteBtn.addEventListener('click', function() {
+              toggleFavorite(subjectId, this);
+            });
+            
+            container.appendChild(clone);
+          }
+        });
+      }
+    }
+
+    // 筛选卡片
+    function filterCards(category) {
+      const cards = document.querySelectorAll('.subject-card');
+      
+      cards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // 显示提示消息
+    function showToast(message) {
+      // 创建提示元素
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-dark/80 text-white px-4 py-2 rounded-lg z-50 backdrop-blur-sm';
+      toast.textContent = message;
+      
+      // 添加到页面
+      document.body.appendChild(toast);
+      
+      // 2秒后移除
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
